@@ -29,7 +29,26 @@ class CloudinaryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+        $uploadedFile = $request->file('file');
+        /**
+         * Proses upload file image ke cloudinary storage
+         * dimana gambar tersebut akan disimpan ke dlaman folder "UploadImages"
+         */
+        $uploadResult = Cloudinary::upload($uploadedFile->getRealPath(),[
+            'folder' => 'UploadImages'
+        ]);
+
+        /**
+         * Store data link dari file gambar dan public_id ke db, yang mana link tersebut kita dapatkan dari proses
+         * upload file image ke cloudinary
+         */
+        Image::create([
+            'image_url' => $uploadResult->getSecurePath(),
+            'public_id' => $uploadResult->getPublicId(),
+        ]);
+
+        return to_route('cloudinary.index');
     }
 
     /**
