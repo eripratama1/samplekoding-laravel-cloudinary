@@ -13,7 +13,10 @@ class CloudinaryController extends Controller
      */
     public function index()
     {
-        return view('index');
+        $images = Image::get();
+        return view('index',[
+            'images' => $images
+        ]);
     }
 
     /**
@@ -62,17 +65,42 @@ class CloudinaryController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit($id)
     {
-        //
+        $image = Image::findOrFail($id);
+        return view('edit',['image' => $image]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request,$id)
     {
-        //
+        $image = Image::findOrFail($id);
+        if ($request->hasFile('file')) {
+
+            /**
+             * Hapus image yang sudah diupload
+             * berdasarkan public_id yang sudah kita simpan ke db
+             * setelah proses delete berhasil upload gambar baru
+             */
+            $uploadedFile = $request->file('file');
+            Cloudinary::destroy($image->public_id);
+
+            $uploadResult = Cloudinary::upload($uploadedFile->getRealPath(),[
+                'folder' => 'UploadImages'
+            ]);
+
+            /**
+             * Update link dan public_id di db dengan data yang baru
+             */
+            $image->update([
+                'image_url' => $uploadResult->getSecurePath(),
+                'public_id' => $uploadResult->getPublicId(),
+            ]);
+        }
+
+        ;return to_route('cloudinary.index');
     }
 
     /**

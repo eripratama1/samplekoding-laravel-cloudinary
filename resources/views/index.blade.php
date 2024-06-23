@@ -15,10 +15,33 @@
             <div class="col-md-8">
                 <div class="card">
                     <div class="card-header">Laravel cloudinary
-                        <a href="{{route('cloudinary.create')}}" class="btn btn-primary btn-sm float-end">Insert new image</a>
+                        <a href="{{ route('cloudinary.create') }}" class="btn btn-primary btn-sm float-end">Insert new
+                            image</a>
                     </div>
                     <div class="card-body">
-                        table
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">File Image</th>
+                                    <th scope="col">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($images as $item)
+                                    <tr>
+                                        <th scope="row">#</th>
+                                        <td>
+                                            <img src="{{$item->image_url}}" width="200" alt="">
+                                        </td>
+                                        <td>
+                                            <a href="{{route('cloudinary.edit',$item->id)}}" class="btn btn-warning btn-sm">Edit</a>
+                                            <button class="btn btn-danger btn-sm">Delete</button>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
