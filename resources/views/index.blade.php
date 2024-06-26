@@ -32,11 +32,21 @@
                                     <tr>
                                         <th scope="row">#</th>
                                         <td>
-                                            <img src="{{$item->image_url}}" width="200" alt="">
+                                            <img src="{{ $item->image_url }}" width="200" alt="">
                                         </td>
                                         <td>
-                                            <a href="{{route('cloudinary.edit',$item->id)}}" class="btn btn-warning btn-sm">Edit</a>
-                                            <button class="btn btn-danger btn-sm">Delete</button>
+                                            <div class="d-flex">
+                                                <a href="{{ route('cloudinary.edit', $item->id) }}"
+                                                    class="btn btn-warning btn-sm mx-2">Edit</a>
+                                                <form action="{{ route('cloudinary.destroy', $item->id) }}"
+                                                    method="post"
+                                                    onsubmit="return confirm('Delete image..??')"
+                                                    >
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                                </form>
+                                            </div>
                                         </td>
                                     </tr>
                                 @endforeach

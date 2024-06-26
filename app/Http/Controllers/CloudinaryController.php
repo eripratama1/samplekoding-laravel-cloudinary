@@ -106,8 +106,13 @@ class CloudinaryController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        //
+        $image = Image::findOrFail($id);
+        /** Delete file image yang sudah di upload dari storage cloudinary */
+        Cloudinary::destroy($image->public_id);
+        /** Delete data yang ada pada db */
+        $image->delete();
+        return redirect()->back();
     }
 }
